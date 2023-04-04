@@ -3,18 +3,21 @@ const db = require('../../config/mongodb');
 const fs = require('fs');
 const path = require('path');
 
+// fungsi read
 const index = (req, res) => {
     db.collection('products').find()
         .toArray()
         .then(result => res.send(result))
         .catch(error => res.send(error));
 }
+// fungsi read by id
 const view = (req, res) => {
     const {id} = req.params;
     db.collection('products').findOne({ _id: new ObjectId(id) })
         .then(result => res.send(result))
         .catch(error => res.send(error));
 }
+// fungsi create
 const store = (req, res) => {
     const { name, price, stock, status } = req.body;
     const image = req.file;
@@ -30,7 +33,7 @@ const store = (req, res) => {
         .catch(error => res.send(error));
     }
 }
-
+// fungsi update by id
 const updateProduct = (req, res) => {
     const { id } = req.params;
     const { name, price, stock, status } = req.body;
@@ -47,7 +50,7 @@ const updateProduct = (req, res) => {
             .catch(error => res.send(error));
     }
 }
-
+// fungsi delete by id
 const deleteProduct = (req, res) => {
     const {id} = req.params;
     db.collection('products').deleteMany({_id: new ObjectId(id)})
