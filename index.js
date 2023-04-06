@@ -10,8 +10,8 @@ app.use(logger('dev'));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use('/public', express.static(path.join(__dirname, 'uploads')));
-app.use('/api/v1', productRouterV1)
-app.use('/api/v2', productRouterV2)
+app.use('/v1', productRouterV1)
+app.use('/v2', productRouterV2)
 app.use((req, res) => {
     res.status(404);
     res.send({
