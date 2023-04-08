@@ -5,10 +5,9 @@ const db = require('./model');
 
 // fungsi read all
 const index = (req, res) => {
-    return res.status(200).json({
-        title: "Express Testing",
-        message: "The app is working properly!",
-      });
+    db.find()
+        .then(result => res.send(result))
+        .catch(error => res.send(error));
 }
 // fungsi create
 const store = (req, res) => {
