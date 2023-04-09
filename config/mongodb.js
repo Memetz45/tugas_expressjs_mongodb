@@ -1,5 +1,5 @@
 const {MongoClient} = require('mongodb');
-const url =  process.env.MONGO_URI ||"mongodb://express_mongodb:123456@0.0.0.0:27017/admin2?authSource=admin";
+const url =  process.env.MONGODB_URI ||"mongodb://express_mongodb:123456@0.0.0.0:27017/admin2?authSource=admin";
 const client = new MongoClient(url);
 
 (async () => {
