@@ -22,7 +22,7 @@ const store = (req, res) => {
     const { name, price, stock, status } = req.body;
     const image = req.file;
     if (image) {
-        const target = path.join(__dirname,"/tmp", '../../uploads', image.originalname);
+        const target = path.join(__dirname, '../../uploads', image.originalname);
         fs.renameSync(image.path, target);
         db.collection('products').insertOne({ name, price, stock, status, image_url: `http://localhost:3000/public/${image.originalname}` })
             .then(result => res.send(result))
