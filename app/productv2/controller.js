@@ -10,42 +10,16 @@ const index = (req, res) => {
         .catch(error => res.send(error));
 }
 // fungsi create
-const store = async (req, res, next) => {
-    try{
-        const { name, price, stock, status } = req.body;
-        const image = req.file;
-        if(image){
-            let tmp_path = image.path;
-            let originalExt = image.originalname.split('.')[image.originalname.split('.').length - 1];
-            let filename = image.filename + '.' + originalExt;
-            let target_path = path.resolve(config.rootPath, `uploads/${filename}`);
-
-            const src = fs.createReadStream(tmp_path);
-            const dest = fs.createWriteStream(target_path);
-            src.pipe(dest);
-
-            src.on('end', async () => {
-                try{
-                    let product = new Product({name, price, stock, status, image_url: filename})
-                    await product.save()
-                    return res.json(product);
-                }catch{
-
-                }
-            })
-        }
-    }catch{
-
+const store = (req, res) => {
+    const { name, price, stock, status } = req.body;
+    const image = req.file;
+    if (image) {
+        const target = path.join(__dirname, '../../uploads', image.originalname);
+        fs.renameSync(image.path, target);
+        db.create({ name, price, stock, status, image_url: `http://localhost:3000/public/${image.originalname}` })
+            .then(result => res.send(result))
+            .catch(error => res.send(error));
     }
-    // const { name, price, stock, status } = req.body;
-    // const image = req.file;
-    // if (image) {
-    //     const target = path.join(__dirname, '../../uploads', image.originalname);
-    //     fs.renameSync(image.path, target);
-    //     db.create({ name, price, stock, status, image_url: `http://localhost:3000/public/${image.originalname}` })
-    //         .then(result => res.send(result))
-    //         .catch(error => res.send(error));
-    // }
 }
 const brand = (req, res) => {
     const {name, price, stock, status} = req.body;
