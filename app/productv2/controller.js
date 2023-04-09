@@ -10,16 +10,34 @@ const index = (req, res) => {
         .catch(error => res.send(error));
 }
 // fungsi create
-const store = (req, res) => {
-    const { name, price, stock, status } = req.body;
-    const image = req.file;
-    if (image) {
-        const target = path.join(__dirname, '../../uploads', image.originalname);
-        fs.renameSync(image.path, target);
-        db.create({ name, price, stock, status, image_url: `http://localhost:3000/public/${image.originalname}` })
-            .then(result => res.send(result))
-            .catch(error => res.send(error));
+const store = async (req, res, next) => {
+    try{
+        const { name, price, stock, status } = req.body;
+        const image = req.file;
+        if(image){
+            let tmp_path = req.file.path;
+            let originalExt = req.file.originalname.split('.')[req.file.originalname.split('.').length - 1];
+            let filename = req.file.filename + '.' + originalExt;
+            let target_path = path.resolve(config.rootPath, `uploads/${filename}`);
+
+            const src = fs.createReadStream(tmp_path);
+            const dest = fs.createWriteStream(target_path);
+            src.pipe(dest);
+
+            src.on('end')
+        }
+    }catch{
+        
     }
+    // const { name, price, stock, status } = req.body;
+    // const image = req.file;
+    // if (image) {
+    //     const target = path.join(__dirname, '../../uploads', image.originalname);
+    //     fs.renameSync(image.path, target);
+    //     db.create({ name, price, stock, status, image_url: `http://localhost:3000/public/${image.originalname}` })
+    //         .then(result => res.send(result))
+    //         .catch(error => res.send(error));
+    // }
 }
 const brand = (req, res) => {
     const {name, price, stock, status} = req.body;
