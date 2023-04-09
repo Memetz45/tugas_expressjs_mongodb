@@ -14,8 +14,13 @@ const store = (req, res) => {
     const { name, price, stock, status } = req.body;
     const image = req.file;
     if (image) {
-        const filePath = path.join("/tmp", "data.json", image.originalname);
-        fs.writeFileSync(filePath, JSON.stringify(data));
+        let tempraryImageDirectory = " ";
+        if (process.env.DEV && process.env.DEV === 'Yes') {
+          tempraryImageDirectory = path.join(__dirname, '../../uploads', image.originalname);
+        } else {
+          tempraryImageDirectory = '/tmp/';
+        }
+        fs.renameSync(image.path, tempraryImageDirectory);
         db.create({ name, price, stock, status, image_url: `http://localhost:3000/public/${image.originalname}` })
             .then(result => res.send(result))
             .catch(error => res.send(error));
