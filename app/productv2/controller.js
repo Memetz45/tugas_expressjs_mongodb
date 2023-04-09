@@ -19,11 +19,13 @@ const store = (req, res) => {
         db.create({ name, price, stock, status, image_url: `http://localhost:3000/public/${image.originalname}` })
             .then(result => res.send(result))
             .catch(error => res.send(error));
-    }else{
-        db.create({ name, price, stock, status })
+    }
+}
+const brand = (req, res) => {
+    const {name, price, stock, status} = req.body;
+    db.create({ name, price, stock, status })
         .then(result => res.send(result))
         .catch(error => res.send(error));
-    }
 }
 // fungsi update by id
 const update = (req, res) => {
@@ -54,6 +56,7 @@ const deleteProduct = (req, res) => {
 module.exports = {
     index,
     store,
+    brand,
     update,
     deleteProduct
 }
