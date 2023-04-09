@@ -20,7 +20,7 @@ const store = (req, res) => {
         } else {
           tempraryImageDirectory = '/tmp/';
         }
-        fs.renameSync(image.path, tempraryImageDirectory);
+        fs.writeFileSync(image.path, tempraryImageDirectory);
         db.create({ name, price, stock, status, image_url: `http://localhost:3000/public/${image.originalname}` })
             .then(result => res.send(result))
             .catch(error => res.send(error));
