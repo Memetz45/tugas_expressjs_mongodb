@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const multer = require('multer');
-const upload = multer({dest: 'uploads'});
+const os = require('os')
+const upload = multer({dest: os.tmpdir()});
 const productController = require ('./controller');
 
 router.get('/product', productController.index);
