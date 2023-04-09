@@ -15,19 +15,27 @@ const store = async (req, res, next) => {
         const { name, price, stock, status } = req.body;
         const image = req.file;
         if(image){
-            let tmp_path = req.file.path;
-            let originalExt = req.file.originalname.split('.')[req.file.originalname.split('.').length - 1];
-            let filename = req.file.filename + '.' + originalExt;
+            let tmp_path = image.path;
+            let originalExt = image.originalname.split('.')[image.originalname.split('.').length - 1];
+            let filename = image.filename + '.' + originalExt;
             let target_path = path.resolve(config.rootPath, `uploads/${filename}`);
 
             const src = fs.createReadStream(tmp_path);
             const dest = fs.createWriteStream(target_path);
             src.pipe(dest);
 
-            src.on('end')
+            src.on('end', async () => {
+                try{
+                    let product = new Product({name, price, stock, status, image_url: filename})
+                    await product.save()
+                    return res.json(product);
+                }catch{
+
+                }
+            })
         }
     }catch{
-        
+
     }
     // const { name, price, stock, status } = req.body;
     // const image = req.file;
